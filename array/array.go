@@ -42,6 +42,34 @@ func SimpleSort(arr *[]int) {
 	}
 }
 
-func QuickSort(arr *[]int) {}
+func partition(arr *[]int, low int, high int) int {
+	pivot := (*arr)[high]
 
-// TODO: Implement QuickSort
+	idx := low - 1
+
+	for j := low; j < high; j++ {
+		if (*arr)[j] <= pivot {
+			idx += 1
+			tmp := (*arr)[idx]
+			(*arr)[idx] = (*arr)[j]
+			(*arr)[j] = tmp
+		}
+	}
+
+	idx += 1
+	(*arr)[high] = (*arr)[idx]
+	(*arr)[idx] = pivot
+
+	return idx
+}
+
+func QuickSort(arr *[]int, low int, high int) {
+	if low >= high || low < 0 {
+		return
+	}
+
+	p := partition(arr, low, high)
+
+	QuickSort(arr, low, p-1)
+	QuickSort(arr, low+1, high)
+}

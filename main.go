@@ -8,9 +8,9 @@ import (
 
 func main() {
 
-	tmp := []int{203, 4, 10, 12, 7, 8}
+	tmp := []int{12, 11, 10, 9, 8, 7}
 
-	array.SimpleSort(&tmp)
+	array.QuickSort(&tmp, 0, len(tmp)-1)
 
 	fmt.Println(tmp)
 }
