@@ -1,4 +1,5 @@
-package linkedList
+// Package linkedlist implements linked lists data structures
+package linkedlist
 
 import "fmt"
 
@@ -7,11 +8,13 @@ type node[T any] struct {
 	next  *node[T]
 }
 
+// SinglyLinkedList type
 type SinglyLinkedList[T any] struct {
 	head   *node[T]
 	length int
 }
 
+// New creates a new single linked list
 func New[T any]() *SinglyLinkedList[T] {
 	return &SinglyLinkedList[T]{
 		head:   nil,
@@ -19,11 +22,13 @@ func New[T any]() *SinglyLinkedList[T] {
 	}
 }
 
+// IsEmpty checks if the list is empty
 func (list *SinglyLinkedList[T]) IsEmpty() bool {
 	return list.length == 0
 }
 
-func (list *SinglyLinkedList[T]) Add(item T) {
+// Append adds a new item at the end of the list
+func (list *SinglyLinkedList[T]) Append(item T) {
 	list.length++
 
 	if list.head == nil {
@@ -48,9 +53,36 @@ func (list *SinglyLinkedList[T]) Add(item T) {
 	curr.next = &tmp
 }
 
-func (list *SinglyLinkedList[T]) AddAtIndex(idx int, item T) {}
+// InsertAt adds a new element at the provided index
+func (list *SinglyLinkedList[T]) InsertAt(idx int, item T) {
+	if idx > list.length || idx < 0 {
+		return
+	}
 
-func (list *SinglyLinkedList[T]) AddAtStart(item T) {
+	if idx == list.length {
+		list.Append(item)
+	} else if idx == 0 {
+		list.Prepend(item)
+	}
+
+	list.length++
+
+	curr := list.head
+
+	for i := 0; i < idx; i++ {
+		curr = curr.next
+	}
+
+	tmp := node[T]{
+		value: item,
+		next:  curr.next,
+	}
+
+	curr.next = &tmp
+}
+
+// Prepend adds a new element at the start of the list
+func (list *SinglyLinkedList[T]) Prepend(item T) {
 	list.length++
 
 	if list.head == nil {
