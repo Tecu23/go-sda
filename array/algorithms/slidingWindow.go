@@ -32,3 +32,13 @@ func maximumAverageSubarray(nums []int, k int) float64 {
 
 	return float64(maxSum) / float64(k)
 }
+
+/*
+  - Return an array of all the start indices of p's anagrams in s. (Can return in any order)
+
+-   @params {string} s -> the string we are searching anagrams in
+-   @params {string} p -> the string we are searching for
+
+-   @return {float64} -> the maximum average
+*/
+func findAllAnagramsInAString(s string, p string) []int { return nil }
