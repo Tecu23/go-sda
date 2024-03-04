@@ -11,6 +11,7 @@ type node[T any] struct {
 // SinglyLinkedList type
 type SinglyLinkedList[T any] struct {
 	head   *node[T]
+	tail   *node[T]
 	length int
 }
 
@@ -18,6 +19,7 @@ type SinglyLinkedList[T any] struct {
 func New[T any]() *SinglyLinkedList[T] {
 	return &SinglyLinkedList[T]{
 		head:   nil,
+		tail:   nil,
 		length: 0,
 	}
 }
@@ -31,26 +33,20 @@ func (list *SinglyLinkedList[T]) IsEmpty() bool {
 func (list *SinglyLinkedList[T]) Append(item T) {
 	list.length++
 
-	if list.head == nil {
-		list.head = &node[T]{
-			value: item,
-			next:  nil,
-		}
-		return
-	}
-
-	curr := list.head
-
-	for curr.next != nil {
-		curr = curr.next
-	}
-
 	tmp := node[T]{
 		value: item,
 		next:  nil,
 	}
 
-	curr.next = &tmp
+	if list.tail == nil {
+		list.head = &tmp
+		list.tail = &tmp
+
+		return
+	}
+
+	list.tail.next = &tmp
+	list.tail = &tmp
 }
 
 // InsertAt adds a new element at the provided index
@@ -67,11 +63,7 @@ func (list *SinglyLinkedList[T]) InsertAt(idx int, item T) {
 
 	list.length++
 
-	curr := list.head
-
-	for i := 0; i < idx; i++ {
-		curr = curr.next
-	}
+	curr := list.getAt(idx - 1)
 
 	tmp := node[T]{
 		value: item,
@@ -85,30 +77,75 @@ func (list *SinglyLinkedList[T]) InsertAt(idx int, item T) {
 func (list *SinglyLinkedList[T]) Prepend(item T) {
 	list.length++
 
+	tmp := node[T]{
+		value: item,
+		next:  nil,
+	}
+
 	if list.head == nil {
-		list.head = &node[T]{
-			value: item,
-			next:  nil,
-		}
+		list.head = &tmp
+		list.tail = &tmp
 		return
 	}
 
-	tmp := node[T]{
-		value: item,
-		next:  list.head,
-	}
-
+	tmp.next = list.head
 	list.head = &tmp
 }
 
-func (list *SinglyLinkedList[T]) GetFirst() *T { return nil }
+// Get returns the value at a specified index
+func (list *SinglyLinkedList[T]) Get(idx int) *T {
+	return &list.getAt(idx).value
+}
 
-func (list *SinglyLinkedList[T]) GetLast() *T { return nil }
+// GetFirst return the value of the first element
+func (list *SinglyLinkedList[T]) GetFirst() *T {
+	return &list.head.value
+}
 
-func (list *SinglyLinkedList[T]) Remove() *T { return nil }
+// GetLast returns the values of the last element
+func (list *SinglyLinkedList[T]) GetLast() *T {
+	return &list.tail.value
+}
 
-func (list *SinglyLinkedList[T]) RemoveAt(idx int) *T { return nil }
+// Remove removes the first element of the list
+func (list *SinglyLinkedList[T]) Remove(n node[T]) *T {
+	list.length--
 
+	if list.length == 0 {
+		out := list.head.value
+		list.head = nil
+		list.tail = nil
+		return &out
+	}
+
+	curr := list.head
+
+	for curr.next != &n && curr.next != nil {
+		curr = curr.next
+	}
+
+	if curr.next == nil {
+		return nil
+	}
+
+	curr.next = n.next
+	n.next = nil
+
+	return &n.value
+}
+
+// RemoveAt removes the element at the specified index and return the value
+func (list *SinglyLinkedList[T]) RemoveAt(idx int) *T {
+	node := list.getAt(idx)
+
+	if node == nil {
+		return nil
+	}
+
+	return list.Remove(*node)
+}
+
+// PrintList prints the list
 func (list *SinglyLinkedList[T]) PrintList() {
 	curr := list.head
 
@@ -116,4 +153,25 @@ func (list *SinglyLinkedList[T]) PrintList() {
 		fmt.Println(curr.value)
 		curr = curr.next
 	}
+}
+
+func (list *SinglyLinkedList[T]) getAt(idx int) *node[T] {
+	if idx < 0 || idx > list.length {
+		return nil
+	}
+
+	if idx == 0 {
+		return list.head
+	}
+
+	if idx == list.length {
+		return list.tail
+	}
+
+	curr := list.head
+	for range idx {
+		curr = curr.next
+	}
+
+	return curr
 }
