@@ -1,6 +1,10 @@
 // Package arrayalgorithms contains common algorithms on arrays
 package arrayalgorithms
 
+import (
+	"fmt"
+)
+
 /*
   - Find a slice whose length is equal to k and has the maximum average value
 
@@ -41,4 +45,39 @@ func maximumAverageSubarray(nums []int, k int) float64 {
 
 -   @return {float64} -> the maximum average
 */
-func findAllAnagramsInAString(s string, p string) []int { return nil }
+func findAllAnagramsInAString(s string, p string) []int {
+	result := make([]int, 0, 20)
+
+	if len(s) < len(p) {
+		return result
+	}
+
+	freqS := make([]int, 26)
+	freqP := make([]int, 26)
+
+	for i := 0; i < len(p); i++ {
+		freqS[int(s[i]-'a')]++
+		freqP[int(p[i]-'a')]++
+	}
+
+	start := 0
+	end := len(p)
+
+	if fmt.Sprint(freqS) == fmt.Sprint(freqP) {
+		result = append(result, start)
+	}
+
+	for end < len(s) {
+		freqS[int(s[start]-'a')]--
+		freqS[int(s[end]-'a')]++
+
+		if fmt.Sprint(freqS) == fmt.Sprint(freqP) {
+			result = append(result, start+1)
+		}
+
+		start++
+		end++
+	}
+
+	return result
+}
