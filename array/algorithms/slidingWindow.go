@@ -191,3 +191,40 @@ func countUniqueCharactersOfAllSubstringsOfAGivenString(s string) int {
 
 	return sum
 }
+
+/*
+  - Return the minimal length of a subarray whose sum is greater than or equal to target.
+    return 0 if not found.
+
+-   @params {int} target -> the target we are searching for
+-   @params {int[]} nums -> the array we are searching in
+
+-   @return {int} -> the count of all unique characters in all substrings
+*/
+func minimumSizeSubarraySum(target int, nums []int) int {
+	currLen, minLen := 0, len(nums)
+	found, sum := false, 0
+	i, j := 0, 0
+
+	for j < len(nums) || sum >= target {
+		if sum < target {
+			sum += nums[j]
+			j++
+			currLen++
+		} else {
+			if currLen <= minLen {
+				found = true
+				minLen = currLen
+			}
+			currLen--
+			sum -= nums[i]
+			i++
+		}
+	}
+
+	if !found {
+		return 0
+	} else {
+		return minLen
+	}
+}

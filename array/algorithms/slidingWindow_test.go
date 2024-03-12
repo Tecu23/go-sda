@@ -125,3 +125,41 @@ func TestCountUniqueCharactersOfAllSubstringsOfAGivenString(t *testing.T) {
 		})
 	}
 }
+
+func TestMinimumSizeSubarraySum(t *testing.T) {
+	tests := []struct {
+		id     string
+		target int
+		nums   []int
+		want   int
+	}{
+		{
+			id:     "1",
+			target: 7,
+			nums:   []int{2, 3, 1, 2, 4, 3},
+			want:   2,
+		}, {
+			id:     "2",
+			target: 4,
+			nums:   []int{1, 4, 4},
+			want:   1,
+		}, {
+			id:     "3",
+			target: 11,
+			nums:   []int{1, 1, 1, 1, 1, 1, 1},
+			want:   0,
+		}, {
+			id:     "4",
+			target: 15,
+			nums:   []int{1, 2, 3, 4, 5},
+			want:   5,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.id, func(t *testing.T) {
+			result := minimumSizeSubarraySum(tt.target, tt.nums)
+			assert.Equal(t, result, tt.want)
+		})
+	}
+}
