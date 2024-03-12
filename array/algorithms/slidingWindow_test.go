@@ -1,4 +1,4 @@
-package arrayalgorithms
+package array
 
 import (
 	"testing"
@@ -65,6 +65,63 @@ func TestFindAllAnagramsInAString(t *testing.T) {
 			result := findAllAnagramsInAString(tt.s, tt.p)
 
 			assert.EqualSlices(t, result, tt.want)
+		})
+	}
+}
+
+func TestPermutationInString(t *testing.T) {
+	tests := []struct {
+		id   string
+		s1   string
+		s2   string
+		want bool
+	}{
+		{
+			id:   "1",
+			s2:   "eidbaooo",
+			s1:   "ab",
+			want: true,
+		}, {
+			id:   "2",
+			s2:   "eidboaoo",
+			s1:   "ab",
+			want: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.id, func(t *testing.T) {
+			result := permutationInString(tt.s1, tt.s2)
+			assert.Equal(t, result, tt.want)
+		})
+	}
+}
+
+func TestCountUniqueCharactersOfAllSubstringsOfAGivenString(t *testing.T) {
+	tests := []struct {
+		id   string
+		s    string
+		want int
+	}{
+		{
+			id:   "1",
+			s:    "ABC",
+			want: 10,
+		}, {
+			id:   "1",
+			s:    "ABA",
+			want: 8,
+		}, {
+			id:   "3",
+			s:    "LEETCODE",
+			want: 92,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.id, func(t *testing.T) {
+			result := countUniqueCharactersOfAllSubstringsOfAGivenString(tt.s)
+			assert.Equal(t, result, tt.want)
 		})
 	}
 }
