@@ -163,3 +163,56 @@ func TestMinimumSizeSubarraySum(t *testing.T) {
 		})
 	}
 }
+
+func TestLongestRepeatingCharacter(t *testing.T) {
+	tests := []struct {
+		id   string
+		s    string
+		k    int
+		want int
+	}{
+		{
+			id:   "1",
+			s:    "ABAB",
+			k:    2,
+			want: 4,
+		}, {
+			id:   "2",
+			s:    "AABABBA",
+			k:    1,
+			want: 4,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.id, func(t *testing.T) {
+			result := longestRepeatingCharacter(tt.s, tt.k)
+			assert.Equal(t, result, tt.want)
+		})
+	}
+}
+
+func TestLongestSubstringWithoutRepeatingCharacters(t *testing.T) {
+	tests := []struct {
+		id   string
+		s    string
+		want int
+	}{
+		{
+			id:   "1",
+			s:    "abcabcbb",
+			want: 3,
+		}, {
+			id:   "2",
+			s:    "pwwkew",
+			want: 3,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.id, func(t *testing.T) {
+			result := longestSubstringWithoutRepeatingCharacters(tt.s)
+			assert.Equal(t, result, tt.want)
+		})
+	}
+}

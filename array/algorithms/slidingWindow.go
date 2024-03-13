@@ -228,3 +228,73 @@ func minimumSizeSubarraySum(target int, nums []int) int {
 		return minLen
 	}
 }
+
+/*
+  - Return the length of the longest substring containing the same letter you can after replacing
+    any letter k amount of times
+
+    ex: ABACABA , k = 2 => 5, because AB AAAAA
+
+-   @params {string} s -> the string we are searching in
+-   @params {int} k -> the numer of replacements we are allowed to make
+
+-   @return {int} -> the length of the substring
+*/
+func longestRepeatingCharacter(s string, k int) int {
+	count := make(map[byte]int)
+	res, maxCount, start := 0, 0, 0
+
+	for end := range s {
+		count[s[end]]++
+
+		if maxCount < count[s[end]] {
+			maxCount = count[s[end]]
+		}
+
+		if end-start+1-maxCount > k {
+			count[s[start]]--
+			start++
+		}
+
+		if res < end-start+1 {
+			res = end - start + 1
+		}
+	}
+	return res
+}
+
+/*
+  - Given a string, find the length of the longest substring without repeating characters
+
+-   @params {string} s -> the string we are searching in
+
+-   @return {int} -> the length of the substring
+*/
+func longestSubstringWithoutRepeatingCharacters(s string) int {
+	count := make(map[byte]int)
+
+	start, end := 0, 0
+	maxC, currC := 0, 0
+
+	for end < len(s) {
+		val := count[s[end]]
+		if val == 0 {
+			count[s[end]]++
+			currC++
+			end++
+		} else {
+			for count[s[end]] > 0 {
+				count[s[start]]--
+				currC--
+				start++
+			}
+		}
+
+		if currC > maxC {
+			maxC = currC
+		}
+
+	}
+
+	return maxC
+}
