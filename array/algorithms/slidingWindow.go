@@ -1,7 +1,8 @@
-// Package arrayalgorithms contains common algorithms on arrays
+// Package array contains common algorithms on arrays
 package array
 
 import (
+	"container/heap"
 	"fmt"
 )
 
@@ -224,9 +225,8 @@ func minimumSizeSubarraySum(target int, nums []int) int {
 
 	if !found {
 		return 0
-	} else {
-		return minLen
 	}
+	return minLen
 }
 
 /*
@@ -297,4 +297,131 @@ func longestSubstringWithoutRepeatingCharacters(s string) int {
 	}
 
 	return maxC
+}
+
+/*
+  - You are given an array of integers nums, there is a sliding window of size k which
+
+is moving from the very left of the array to the very right. You can only see the k numbers
+in the window. Each time the sliding window moves right by one position.
+
+-   @params {[]int} nums -> the arrays we are using the window for
+-   @params {int} k -> the size of the sliding window
+
+-   @return {[]int} -> the max sliding windows array
+*/
+type pair struct {
+	index, value int
+}
+
+type pairHeap []pair
+
+func (h pairHeap) Len() int {
+	return len(h)
+}
+
+func (h pairHeap) Less(i, j int) bool {
+	return h[i].value > h[j].value || (h[i].value == h[j].value && h[i].index < h[j].index)
+}
+
+func (h pairHeap) Swap(i, j int) {
+	h[i], h[j] = h[j], h[i]
+}
+
+func (h *pairHeap) Push(x interface{}) {
+	*h = append(*h, x.(pair))
+}
+
+func (h *pairHeap) Pop() interface{} {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[0 : n-1]
+	return x
+}
+
+func slidingWindowMaximum(nums []int, k int) []int {
+	res := make([]int, len(nums)-k+1)
+
+	i, j, idx := 0, 0, 0
+	pq := &pairHeap{}
+	heap.Init(pq)
+
+	for j < len(nums) {
+		pair := pair{j, nums[j]}
+		heap.Push(pq, pair)
+		if j-i+1 < k {
+			j++
+		} else if j-i+1 == k {
+			for (*pq)[0].index < i {
+				heap.Pop(pq)
+			}
+			first := (*pq)[0]
+			res[idx] = first.value
+			if first.index < i+1 {
+				heap.Pop(pq)
+			}
+			i++
+			j++
+			idx++
+		}
+	}
+
+	return res
+}
+
+/*
+  - Given two strings s and t of lengths m and n respectively, return the minimum window substring
+
+    of s such that every character in t (including duplicates) is included in the window.
+    If there is no such substring, return the empty string "".
+
+-   @params {string} s -> the string in which we are searching for substrings
+-   @params {string} t -> the string which characters have to be in the substring
+
+-   @return {string} -> the substring of s which contains every letter of t
+*/
+func minimumWindowSubstring(s, t string) string {
+	if len(t) > len(s) {
+		return ""
+	}
+
+	count := make([]int, 60)
+
+	for c := range t {
+		count[t[c]-65]++
+	}
+
+	i, j := 0, 0
+	countChar := len(t)
+	minLen, startIndex := int(^uint(0)>>1), 0
+
+	for j < len(s) {
+		if count[s[j]-65] > 0 {
+			countChar--
+		}
+
+		count[s[j]-65]--
+		j++
+
+		for countChar == 0 {
+			if (j - i) < minLen {
+				startIndex = i
+				minLen = j - i
+			}
+
+			if count[s[i]-65] == 0 {
+				countChar++
+			}
+
+			count[s[i]-65]++
+			i++
+		}
+	}
+
+	if minLen == int(^uint(0)>>1) {
+		return ""
+	}
+
+	return s[startIndex : startIndex+minLen]
 }
